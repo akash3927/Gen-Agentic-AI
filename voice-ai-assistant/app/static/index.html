@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>AI Voice Assistant</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 700px;
+        margin: 50px auto;
+        padding: 20px;
+      }
+
+      h1 {
+        text-align: center;
+      }
+
+      #chat {
+        border: 1px solid #ddd;
+        padding: 20px;
+        height: 400px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        border-radius: 10px;
+      }
+
+      .message {
+        margin: 12px 0;
+        padding: 10px;
+        border-radius: 8px;
+      }
+
+      .user {
+        background: #eee;
+      }
+
+      .assistant {
+        background: #dff5df;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+      }
+
+      input {
+        flex: 1;
+        padding: 12px;
+      }
+
+      button {
+        padding: 12px 18px;
+        cursor: pointer;
+      }
+
+      #recordButton {
+        background: #222;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>🤖 AI Voice Assistant</h1>
+
+    <div id="chat"></div>
+
+    <div class="controls">
+      <input id="message" placeholder="Type your message..." />
+
+      <button onclick="sendMessage()">Send</button>
+
+      <button id="recordButton" onclick="toggleRecording()">🎤 Record</button>
+    </div>
+
+    <audio
+      id="audioPlayer"
+      controls
+      style="width: 100%; margin-top: 20px"
+    ></audio>
+
+    <script>
+      let mediaRecorder;
+      let audioChunks = [];
+      let isRecording = false;
+
+      function addMessage(role, text) {
+        const chat = document.getElementById("chat");
+
+        const message = document.createElement("div");
+
+        message.className =
+          "message " + (role === "user" ? "user" : "assistant");
+
+        message.innerText = (role === "user" ? "You: " : "AI: ") + text;
+
+        chat.appendChild(message);
+
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("message");
+
+        const text = input.value.trim();
+
+        if (!text) return;
+
+        addMessage("user", text);
+
+        input.value = "";
+
+        const response = await fetch("/chat", {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            message: text,
+          }),
+        });
+
+        if (!response.ok) {
+          addMessage("assistant", "Something went wrong.");
+          return;
+        }
+
+        const data = await response.json();
+
+        addMessage("assistant", data.response);
+      }
+
+      document.getElementById("message").addEventListener("keydown", (event) => {
+        if (event.key === "Enter") sendMessage();
+      });
+
+      async function toggleRecording() {
+        const button = document.getElementById("recordButton");
+
+        if (!isRecording) {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+          });
+
+          audioChunks = [];
+
+          mediaRecorder = new MediaRecorder(stream);
+
+          mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+              audioChunks.push(event.data);
+            }
+          };
+
+          mediaRecorder.onstop = async () => {
+            stream.getTracks().forEach((track) => track.stop());
+
+            const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+
+            await sendVoice(audioBlob);
+          };
+
+          mediaRecorder.start();
+
+          isRecording = true;
+
+          button.innerText = "⏹ Stop";
+        } else {
+          mediaRecorder.stop();
+
+          isRecording = false;
+
+          button.innerText = "🎤 Record";
+        }
+      }
+
+      async function sendVoice(audioBlob) {
+        addMessage("user", "🎤 Voice message");
+
+        const formData = new FormData();
+
+        formData.append("file", audioBlob, "voice.webm");
+
+        const response = await fetch("/voice-chat", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          addMessage("assistant", "Voice processing failed.");
+
+          return;
+        }
+
+        const data = await response.json();
+
+        addMessage("user", data.transcript);
+        addMessage("assistant", data.response);
+
+        const speechResponse = await fetch("/speak", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: data.response }),
+        });
+
+        if (!speechResponse.ok) {
+          addMessage("assistant", "The reply was generated, but audio playback failed.");
+          return;
+        }
+
+        const audioBlobResponse = await speechResponse.blob();
+
+        const audioUrl = URL.createObjectURL(audioBlobResponse);
+
+        const player = document.getElementById("audioPlayer");
+
+        player.src = audioUrl;
+
+        player.play();
+
+      }
+    </script>
+  </body>
+</html>
