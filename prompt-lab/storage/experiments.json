@@ -1,0 +1,282 @@
+[
+  {
+    "experiment_id": "db6b99a613c3406b88456eb95b3e43f5",
+    "prompt_id": null,
+    "prompt_version": null,
+    "final_prompt": "explain the gen ai",
+    "output": "Generative AI, often referred to as Gen AI, is a subset of artificial intelligence focused on creating new content or data. It leverages algorithms and models, particularly deep learning techniques, to generate text, images, music, and other forms of data that mimic real-world examples.\n\n### Key Components:\n\n1. **Models**:\n   - **Generative Adversarial Networks (GANs)**: Comprises two networks\u2014a generator and a discriminator\u2014competing against each other to create realistic data.\n   - **Variational Autoencoders (VAEs)**: Encode input data into a latent space and decode it back, allowing for the generation of new, similar data.\n   - **Transformers**: Such as GPT (Generative Pre-trained Transformer), which excels in generating coherent and contextually relevant text.\n\n2. **Applications**:\n   - **Text Generation**: Writing essays, articles, or even poetry.\n   - **Image Generation**: Creating art, photorealistic images, or even realistic deepfakes.\n   - **Music Composition**: Generating original music tracks.\n   - **Chatbots and Virtual Assistants**: Creating conversational agents that can interact with users in a human-like manner.\n\n3. **Training**:\n   - Generative models require large datasets to learn the underlying patterns, which they use to create novel content. Training involves adjusting model parameters to minimize the difference between generated data and real data.\n\n4. **Ethical Considerations**:\n   - **Misinformation**: Generated content can be used to spread false information.\n   - **Bias**: Models can perpetuate or amplify biases present in training data.\n   - **Copyright Issues**: Generated works may infringe on originality and ownership.\n\n5. **Future Directions**:\n   - Continued advancements aim to improve the quality and coherence of generated content, as well as addressing ethical and societal implications.\n\n### Conclusion\nGenerative AI represents a fascinating and rapidly evolving area of technology with the potential to impact many fields, from creative arts to software development. As it matures, understanding its capabilities and limitations will be crucial for responsible usage.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 6131.92,
+    "usage": {
+      "input_tokens": 21,
+      "output_tokens": 431,
+      "total_tokens": 452
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T03:51:30.543673Z"
+  },
+  {
+    "experiment_id": "d1dc7668a47a487987bd85723f9e0ca1",
+    "prompt_id": null,
+    "prompt_version": null,
+    "final_prompt": "tell me the 5 openings moving from 1800 rating to 2000",
+    "output": "Certainly! If you're aiming to increase your chess rating from 1800 to 2000, focusing on solid and well-studied openings can be very beneficial. Here are five openings to consider:\n\n### 1. **Sicilian Defense (1.e4 c5)**\n   - **Main Ideas**: Leads to unbalanced positions and offers chances for both sides. Aim for the Open Sicilian with 2.Nf3 and 3.d4.\n   - **Popular Variants**: \n     - Najdorf Variation\n     - Dragon Variation\n     - Scheveningen Variation\n\n### 2. **Queen's Gambit Declined (1.d4 d5 2.c4 e6)**\n   - **Main Ideas**: Solid and flexible, this opening sustains pawn structure and allows for gradual piece development.\n   - **Popular Variants**:\n     - Tartakower (or Tartakower-Makagonov-Bondarevsky System)\n     - Orthodox Variation\n\n### 3. **Ruy Lopez (Spanish Opening, 1.e4 e5 2.Nf3 Nc6 3.Bb5)**\n   - **Main Ideas**: This classic opening leads to rich middlegame positions. It provides a good foundation for strategic play.\n   - **Popular Variants**:\n     - Morphy Defense (3...a6)\n     - Berlin Defense (3...Nf6)\n\n### 4. **Nimzo-Indian Defense (1.d4 Nf6 2.c4 e6 3.Nc3 Bb4)**\n   - **Main Ideas**: A solid choice against 1.d4 which combines both position play and tactical opportunities. Offers flexibility and can transpose into various structures.\n   - **Popular Variants**:\n     - Classical Variation (4.O-O)\n     - Rubinstein System (4.e3)\n\n### 5. **French Defense (1.e4 e6)**\n   - **Main Ideas**: Solid and resilient, the French Defense allows for a strong pawn structure and counterplay against 1.e4.\n   - **Popular Variants**:\n     - Classical Variation (2.d4 d5 3.Nc3)\n     - Advance Variation (2.d4 d5 3.e5)\n\n### Tips for Improvement:\n- **Study Theory**: Familiarize yourself with key ideas, plans, and traps in each opening.\n- **Practice Tactics**: Utilize tools like tactic trainers to sharpen your skills.\n- **Play Regularly**: Apply what you learn in your games; analyze your mistakes afterward.\n- **Endgame Knowledge**: A strong understanding of endgames can often turn a slight advantage from the opening into a win.\n\nBy mastering these openings, you'll not only increase your rating but also deepen your understanding of various positions and strategies. Happy playing!",
+    "model": "gpt-4o-mini",
+    "latency_ms": 5710.02,
+    "usage": {
+      "input_tokens": 32,
+      "output_tokens": 584,
+      "total_tokens": 616
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T04:48:33.666057Z"
+  },
+  {
+    "experiment_id": "0bb77b450fff45218ca5089508fd013d",
+    "prompt_id": "concise_summarizer_v1",
+    "prompt_version": 1,
+    "final_prompt": "Summarize the following in no more than 40 words:\n\nAI assistants can accelerate routine work, but their output must be reviewed.",
+    "output": "AI assistants can streamline routine tasks; however, it's essential to review their output for accuracy.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 2140.91,
+    "usage": {
+      "input_tokens": 49,
+      "output_tokens": 19,
+      "total_tokens": 68
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:12:40.519446Z"
+  },
+  {
+    "experiment_id": "f9ae2b8a37504b6186a492a28058cc55",
+    "prompt_id": "sentiment_classifier_v1",
+    "prompt_version": 1,
+    "final_prompt": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: AI assistants can accelerate routine work, but their output must be reviewed.\nSentiment:",
+    "output": "neutral",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1298.75,
+    "usage": {
+      "input_tokens": 65,
+      "output_tokens": 2,
+      "total_tokens": 67
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:12:41.827282Z"
+  },
+  {
+    "experiment_id": "336d04e0ce534c858b991cff5b977a67",
+    "prompt_id": "concise_summarizer_v1",
+    "prompt_version": 1,
+    "final_prompt": "Summarize the following in no more than 40 words:\n\nArtificial intelligence is changing software development by helping programmers draft code, find bugs, write tests, and explain unfamiliar systems. Developers still need to review generated work carefully for correctness and security.",
+    "output": "AI is transforming software development by assisting with code drafting, bug detection, test writing, and system explanations. However, developers must still meticulously review the AI-generated work for accuracy and security.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 2175.84,
+    "usage": {
+      "input_tokens": 71,
+      "output_tokens": 38,
+      "total_tokens": 109
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:18:04.904994Z"
+  },
+  {
+    "experiment_id": "6a87589ed8124acfb3b9f80ad2359f7f",
+    "prompt_id": "concise_summarizer_v1",
+    "prompt_version": 1,
+    "final_prompt": "Summarize the following in no more than 40 words:\n\nRemote work gives employees flexibility and removes commuting time, but teams must deliberately document decisions, communicate asynchronously, and create opportunities for social connection.",
+    "output": "Remote work offers flexibility and eliminates commuting, but requires teams to document decisions, communicate asynchronously, and foster social connections intentionally.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 2248.01,
+    "usage": {
+      "input_tokens": 62,
+      "output_tokens": 25,
+      "total_tokens": 87
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:18:07.159644Z"
+  },
+  {
+    "experiment_id": "ae75c4775d594f2ba903de6b6f0631dd",
+    "prompt_id": "concise_summarizer_v1",
+    "prompt_version": 1,
+    "final_prompt": "Summarize the following in no more than 40 words:\n\nSolar and wind capacity continues to expand as costs decline. Because generation varies with weather, grids also need storage, transmission upgrades, and flexible demand.",
+    "output": "Solar and wind capacity is growing as costs decrease. To manage weather-dependent generation, grids require upgrades in storage, transmission, and flexible demand.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1221.12,
+    "usage": {
+      "input_tokens": 64,
+      "output_tokens": 29,
+      "total_tokens": 93
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:18:08.386586Z"
+  },
+  {
+    "experiment_id": "177ed61ef1324dee8b83d92d93f9121e",
+    "prompt_id": "concise_summarizer_v1",
+    "prompt_version": 1,
+    "final_prompt": "Summarize the following in no more than 40 words:\n\nPhishing remains effective because it targets human trust rather than software alone. Training helps, while multifactor authentication and email filtering add important technical defenses.",
+    "output": "Phishing exploits human trust, making it effective. Training is beneficial, but incorporating multifactor authentication and email filtering enhances technical defenses against such attacks.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1222.11,
+    "usage": {
+      "input_tokens": 64,
+      "output_tokens": 30,
+      "total_tokens": 94
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:18:09.615260Z"
+  },
+  {
+    "experiment_id": "019484c00a9a448aa2552a41bcbd065c",
+    "prompt_id": "concise_summarizer_v1",
+    "prompt_version": 1,
+    "final_prompt": "Summarize the following in no more than 40 words:\n\nSpaced repetition improves long-term memory by reviewing material near the point when it might be forgotten. Active recall strengthens this effect by requiring learners to retrieve answers rather than reread notes.",
+    "output": "Spaced repetition enhances long-term memory by reviewing material before it\u2019s forgotten, while active recall boosts retention by prompting learners to retrieve answers instead of passively rereading notes.",
+    "model": "gpt-4o-mini",
+    "latency_ms": 2246.19,
+    "usage": {
+      "input_tokens": 71,
+      "output_tokens": 35,
+      "total_tokens": 106
+    },
+    "status": "success",
+    "format_compliant": true,
+    "evaluation_notes": [
+      "Basic checks passed"
+    ],
+    "created_at": "2026-10-10T05:18:11.868124Z"
+  },
+  {
+    "experiment_id": "d9e9fd587bab4db3b0a92c848d096161",
+    "prompt_id": "sentiment_classifier_v1",
+    "prompt_version": 1,
+    "final_prompt": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: Artificial intelligence is changing software development by helping programmers draft code, find bugs, write tests, and explain unfamiliar systems. Developers still need to review generated work carefully for correctness and security.\nSentiment:",
+    "output": "neutral",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1406.56,
+    "usage": {
+      "input_tokens": 87,
+      "output_tokens": 2,
+      "total_tokens": 89
+    },
+    "status": "success",
+    "format_compliant": false,
+    "evaluation_notes": [
+      "Missing expected keywords: development"
+    ],
+    "created_at": "2026-10-10T05:26:53.819471Z"
+  },
+  {
+    "experiment_id": "a75655f51d2c4fbc80cfc02124b51e20",
+    "prompt_id": "sentiment_classifier_v1",
+    "prompt_version": 1,
+    "final_prompt": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: Remote work gives employees flexibility and removes commuting time, but teams must deliberately document decisions, communicate asynchronously, and create opportunities for social connection.\nSentiment:",
+    "output": "neutral",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1215.86,
+    "usage": {
+      "input_tokens": 78,
+      "output_tokens": 2,
+      "total_tokens": 80
+    },
+    "status": "success",
+    "format_compliant": false,
+    "evaluation_notes": [
+      "Missing expected keywords: remote"
+    ],
+    "created_at": "2026-10-10T05:26:55.044985Z"
+  },
+  {
+    "experiment_id": "0ca98369494d46b4875353267a455966",
+    "prompt_id": "sentiment_classifier_v1",
+    "prompt_version": 1,
+    "final_prompt": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: Solar and wind capacity continues to expand as costs decline. Because generation varies with weather, grids also need storage, transmission upgrades, and flexible demand.\nSentiment:",
+    "output": "neutral",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1118.69,
+    "usage": {
+      "input_tokens": 80,
+      "output_tokens": 2,
+      "total_tokens": 82
+    },
+    "status": "success",
+    "format_compliant": false,
+    "evaluation_notes": [
+      "Missing expected keywords: storage"
+    ],
+    "created_at": "2026-10-10T05:26:56.170817Z"
+  },
+  {
+    "experiment_id": "55efe27b92e4431fafca744eba1c1ba7",
+    "prompt_id": "sentiment_classifier_v1",
+    "prompt_version": 1,
+    "final_prompt": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: Phishing remains effective because it targets human trust rather than software alone. Training helps, while multifactor authentication and email filtering add important technical defenses.\nSentiment:",
+    "output": "neutral",
+    "model": "gpt-4o-mini",
+    "latency_ms": 1120.17,
+    "usage": {
+      "input_tokens": 80,
+      "output_tokens": 2,
+      "total_tokens": 82
+    },
+    "status": "success",
+    "format_compliant": false,
+    "evaluation_notes": [
+      "Missing expected keywords: phishing"
+    ],
+    "created_at": "2026-10-10T05:26:57.297740Z"
+  },
+  {
+    "experiment_id": "3ca25cf3ef7d44adb29d5ac7a23a0515",
+    "prompt_id": "sentiment_classifier_v1",
+    "prompt_version": 1,
+    "final_prompt": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: Spaced repetition improves long-term memory by reviewing material near the point when it might be forgotten. Active recall strengthens this effect by requiring learners to retrieve answers rather than reread notes.\nSentiment:",
+    "output": "neutral",
+    "model": "gpt-4o-mini",
+    "latency_ms": 2450.84,
+    "usage": {
+      "input_tokens": 87,
+      "output_tokens": 2,
+      "total_tokens": 89
+    },
+    "status": "success",
+    "format_compliant": false,
+    "evaluation_notes": [
+      "Missing expected keywords: recall"
+    ],
+    "created_at": "2026-10-10T05:26:59.756601Z"
+  }
+]

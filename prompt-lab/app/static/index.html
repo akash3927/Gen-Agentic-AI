@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prompt Laboratory</title>
+  <style>
+    :root { --ink:#18201c; --muted:#66716b; --paper:#f6f3eb; --card:#fffdf8; --line:#d9d5c9; --accent:#146b4b; --accent2:#e36b39; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:15px/1.5 Inter, ui-sans-serif, system-ui, sans-serif; }
+    header { padding:36px max(24px,calc((100vw - 1180px)/2)); background:#153d31; color:white; }
+    header h1 { margin:0; font:700 clamp(28px,5vw,48px)/1.1 Georgia,serif; }
+    header p { max-width:680px; margin:10px 0 0; color:#cce0d7; }
+    nav { display:flex; gap:8px; overflow:auto; padding:14px max(24px,calc((100vw - 1180px)/2)); background:#fff; border-bottom:1px solid var(--line); position:sticky; top:0; z-index:2; }
+    nav button { white-space:nowrap; background:transparent; color:var(--muted); }
+    nav button.active { background:var(--ink); color:white; }
+    main { max-width:1180px; margin:auto; padding:28px 24px 60px; }
+    .tab { display:none; } .tab.active { display:block; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; box-shadow:0 4px 18px #18201c0a; }
+    .wide { grid-column:1/-1; }
+    h2,h3 { margin-top:0; } h2 { font:700 28px Georgia,serif; } h3 { font-size:16px; }
+    label { display:block; margin:12px 0 5px; color:var(--muted); font-size:13px; font-weight:650; }
+    input,textarea,select { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:white; color:var(--ink); font:inherit; }
+    textarea { min-height:120px; resize:vertical; font-family:ui-monospace,SFMono-Regular,monospace; }
+    button { border:0; border-radius:8px; padding:10px 15px; background:var(--accent); color:white; font-weight:700; cursor:pointer; }
+    button.secondary { background:#e9e7df; color:var(--ink); }
+    .actions,.row { display:flex; gap:10px; align-items:end; flex-wrap:wrap; margin-top:14px; }
+    .row > * { flex:1; min-width:150px; }
+    pre { white-space:pre-wrap; overflow:auto; background:#17221d; color:#dceae3; border-radius:10px; padding:15px; min-height:70px; }
+    .metrics { display:flex; gap:8px; flex-wrap:wrap; margin:10px 0; }
+    .pill { padding:5px 9px; background:#e5eee9; border-radius:99px; font-size:12px; }
+    .prompt-item,.history-item { padding:12px 0; border-bottom:1px solid var(--line); }
+    .prompt-item:last-child { border-bottom:0; }
+    small,.muted { color:var(--muted); }
+    .status { min-height:22px; color:var(--accent2); margin-top:8px; }
+    .compare { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    table { width:100%; border-collapse:collapse; font-size:13px; } th,td { padding:9px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top; }
+    @media(max-width:760px){ .grid,.compare{grid-template-columns:1fr}.wide{grid-column:auto} }
+  </style>
+</head>
+<body>
+  <header><h1>Prompt Laboratory</h1><p>Build, version, run, compare, and evaluate prompts while seeing exactly what reaches the model.</p></header>
+  <nav id="nav"></nav>
+  <main>
+    <section id="playground" class="tab active">
+      <h2>Playground</h2>
+      <div class="grid">
+        <div class="card">
+          <label>Saved prompt</label><select id="runPrompt"></select>
+          <label>Or ad-hoc template</label><textarea id="template" placeholder="Leave blank to use the saved prompt">Explain {topic} to a {audience}.</textarea>
+          <label>System instructions</label><textarea id="system" rows="3" placeholder="You are a patient teacher."></textarea>
+          <label>Variables (JSON)</label><textarea id="variables">{"topic":"prompt engineering","audience":"beginner"}</textarea>
+          <div class="row"><div><label>Model</label><input id="model" value="gpt-4o-mini"></div><div><label>Temperature (optional)</label><input id="temperature" type="number" min="0" max="2" step="0.1"></div><div><label>Output</label><select id="outputFormat"><option>text</option><option>json</option></select></div></div>
+          <div class="actions"><button onclick="runPrompt()">Run prompt</button></div><div id="runStatus" class="status"></div>
+        </div>
+        <div class="card"><h3>Result</h3><div id="runMetrics" class="metrics"></div><label>Final rendered prompt</label><pre id="finalPrompt">Run a prompt to inspect it.</pre><label>Model response</label><pre id="runOutput">—</pre><div id="runNotes" class="muted"></div></div>
+      </div>
+    </section>
+
+    <section id="prompts" class="tab"><h2>Prompt Library</h2><div class="grid"><div class="card"><h3>Create a new immutable version</h3><label>Name</label><input id="promptName" placeholder="Concise Summarizer"><label>Description</label><input id="description"><label>System instructions</label><textarea id="newSystem"></textarea><label>Template</label><textarea id="newTemplate">Task: {task}\nContext: {context}\nReturn: {output_format}</textarea><button onclick="createPrompt()">Save version</button><div id="createStatus" class="status"></div></div><div class="card"><h3>Saved prompts and techniques</h3><div id="promptList"></div></div></div></section>
+
+    <section id="compare" class="tab"><h2>Compare A vs B</h2><div class="card"><div class="row"><div><label>Prompt A</label><select id="promptA"></select></div><div><label>Prompt B</label><select id="promptB"></select></div></div><label>Shared variables (JSON)</label><textarea id="compareVars">{"input":"AI assistants can accelerate routine work, but their output must be reviewed.","task":"Write a concise summary.","context":"AI assistants can accelerate routine work, but their output must be reviewed."}</textarea><button onclick="comparePrompts()">Compare</button><div id="compareStatus" class="status"></div></div><div class="compare" style="margin-top:18px"><div class="card"><h3>Prompt A</h3><div id="metricsA" class="metrics"></div><pre id="outputA">—</pre></div><div class="card"><h3>Prompt B</h3><div id="metricsB" class="metrics"></div><pre id="outputB">—</pre></div></div></section>
+
+    <section id="batch" class="tab"><h2>Batch Evaluation</h2><div class="card"><div class="row"><div><label>Prompt</label><select id="batchPrompt"></select></div><div><label>Model</label><input id="batchModel" value="gpt-4o-mini"></div></div><button onclick="runBatch()">Run 5 test cases</button><div id="batchStatus" class="status"></div><div id="batchResults"></div></div></section>
+
+    <section id="structured" class="tab"><h2>Structured Output</h2><div class="grid"><div class="card"><p class="muted">The SDK parses the response directly into a <code>CandidateAnalysis</code> Pydantic model. Invalid data is surfaced as a validation error.</p><label>Candidate text</label><textarea id="candidate">Priya is a backend developer with 4 years of experience. She works with Python, FastAPI, PostgreSQL, and Docker. Recommend her for a backend role.</textarea><button onclick="runStructured()">Analyze candidate</button><div id="structuredStatus" class="status"></div></div><div class="card"><h3>Validated Python-shaped data</h3><pre id="structuredOutput">—</pre></div></div></section>
+
+    <section id="history" class="tab"><h2>Experiment History</h2><div class="card"><button class="secondary" onclick="loadHistory()">Refresh</button><div id="historyList"></div></div></section>
+  </main>
+<script>
+const tabs=['playground','prompts','compare','batch','structured','history']; let promptData=[];
+const $=id=>document.getElementById(id);
+async function api(path,options={}){const r=await fetch(path,{headers:{'Content-Type':'application/json'},...options});const data=await r.json();if(!r.ok)throw new Error(data.detail||JSON.stringify(data));return data}
+function showTab(name){tabs.forEach(t=>$(t).classList.toggle('active',t===name));[...$('nav').children].forEach(b=>b.classList.toggle('active',b.dataset.tab===name));if(name==='history')loadHistory()}
+$('nav').innerHTML=tabs.map((t,i)=>`<button data-tab="${t}" class="${i?'':'active'}" onclick="showTab('${t}')">${t[0].toUpperCase()+t.slice(1)}</button>`).join('');
+function options(blank=false){return (blank?'<option value="">Use ad-hoc template</option>':'')+promptData.map(p=>`<option value="${p.prompt_id}">${p.prompt_name} · v${p.version}</option>`).join('')}
+async function loadPrompts(){promptData=await api('/api/prompts');$('runPrompt').innerHTML=options(true);$('promptA').innerHTML=options();$('promptB').innerHTML=options();$('batchPrompt').innerHTML=options();if(promptData[1])$('promptB').value=promptData[1].prompt_id;$('promptList').innerHTML=promptData.map(p=>`<div class="prompt-item"><strong>${p.prompt_name} · v${p.version}</strong><br><small>${p.prompt_id}</small><p>${p.description||''}</p><pre>${p.template}</pre></div>`).join('')}
+function metrics(r){return `<span class="pill">${r.latency_ms} ms</span><span class="pill">${r.usage.input_tokens} in</span><span class="pill">${r.usage.output_tokens} out</span><span class="pill">${r.usage.total_tokens} total</span><span class="pill">${r.format_compliant?'✓ compliant':'✗ check format'}</span>`}
+async function runPrompt(){try{$('runStatus').textContent='Running…';const body={prompt_id:$('runPrompt').value||null,template:$('template').value||null,system_instructions:$('system').value,variables:JSON.parse($('variables').value),model:$('model').value,temperature:$('temperature').value?Number($('temperature').value):null,output_format:$('outputFormat').value};if(body.prompt_id)body.template=null;const r=await api('/api/run',{method:'POST',body:JSON.stringify(body)});$('runMetrics').innerHTML=metrics(r);$('finalPrompt').textContent=r.final_prompt;$('runOutput').textContent=r.output;$('runNotes').textContent=r.evaluation_notes.join(' · ');$('runStatus').textContent=''}catch(e){$('runStatus').textContent=e.message}}
+async function createPrompt(){try{await api('/api/prompts',{method:'POST',body:JSON.stringify({prompt_name:$('promptName').value,description:$('description').value,system_instructions:$('newSystem').value,template:$('newTemplate').value})});$('createStatus').textContent='Saved.';await loadPrompts()}catch(e){$('createStatus').textContent=e.message}}
+async function comparePrompts(){try{$('compareStatus').textContent='Running both prompts…';const r=await api('/api/compare',{method:'POST',body:JSON.stringify({prompt_a_id:$('promptA').value,prompt_b_id:$('promptB').value,variables:JSON.parse($('compareVars').value),model:$('model').value,output_format:'text'})});for(const [x,v] of [['A',r.prompt_a],['B',r.prompt_b]]){$('metrics'+x).innerHTML=metrics(v);$('output'+x).textContent=v.output}$('compareStatus').textContent=''}catch(e){$('compareStatus').textContent=e.message}}
+async function runBatch(){try{$('batchStatus').textContent='Running dataset sequentially…';const r=await api('/api/batch',{method:'POST',body:JSON.stringify({prompt_id:$('batchPrompt').value,model:$('batchModel').value})});$('batchStatus').textContent=`${r.passed} passed · ${r.failed} failed`;$('batchResults').innerHTML=`<table><thead><tr><th>Case</th><th>Result</th><th>Metrics</th><th>Checks</th></tr></thead><tbody>${r.results.map(x=>`<tr><td>${x.case.id}</td><td>${x.result.output}</td><td>${x.result.latency_ms} ms<br>${x.result.usage.total_tokens} tokens</td><td>${x.result.evaluation_notes.join('<br>')}</td></tr>`).join('')}</tbody></table>`}catch(e){$('batchStatus').textContent=e.message}}
+async function runStructured(){try{$('structuredStatus').textContent='Parsing…';const r=await api('/api/structured',{method:'POST',body:JSON.stringify({candidate_text:$('candidate').value,model:$('model').value})});$('structuredOutput').textContent=JSON.stringify(r.parsed,null,2)||r.validation_error;$('structuredStatus').textContent=r.valid?'Schema valid':'Validation failed'}catch(e){$('structuredStatus').textContent=e.message}}
+async function loadHistory(){try{const rows=await api('/api/history?limit=100');$('historyList').innerHTML=rows.length?rows.map(r=>`<div class="history-item"><strong>${r.prompt_id||'ad-hoc'} · ${r.model}</strong> <small>${new Date(r.created_at).toLocaleString()}</small><div class="metrics">${metrics(r)}</div><details><summary>Inspect input/output</summary><pre>${r.final_prompt}</pre><pre>${r.output}</pre></details></div>`).join(''):'<p class="muted">No experiments yet.</p>'}catch(e){$('historyList').textContent=e.message}}
+loadPrompts().catch(e=>$('runStatus').textContent=e.message);
+</script>
+</body></html>

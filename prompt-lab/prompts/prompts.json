@@ -1,0 +1,38 @@
+[
+  {
+    "prompt_name": "Concise Summarizer",
+    "template": "Summarize the following in no more than 40 words:\n\n{input}",
+    "system_instructions": "You are a precise editor. Preserve the central meaning.",
+    "description": "Zero-shot summarization with a clear length constraint.",
+    "prompt_id": "concise_summarizer_v1",
+    "version": 1,
+    "created_at": "2026-01-01T00:00:00Z"
+  },
+  {
+    "prompt_name": "Concise Summarizer",
+    "template": "Task: {task}\nContext: {input}\nReturn exactly one concise paragraph of at most 35 words.",
+    "system_instructions": "Act as a senior technical editor. Do not add facts.",
+    "description": "Role and structured prompting version.",
+    "prompt_id": "concise_summarizer_v2",
+    "version": 2,
+    "created_at": "2026-01-02T00:00:00Z"
+  },
+  {
+    "prompt_name": "Sentiment Classifier",
+    "template": "Classify the sentiment as positive, negative, or neutral.\n\nExamples:\n'I love it' -> positive\n'This broke immediately' -> negative\n\nText: {input}\nSentiment:",
+    "system_instructions": "Return only the sentiment label.",
+    "description": "Few-shot classification example.",
+    "prompt_id": "sentiment_classifier_v1",
+    "version": 1,
+    "created_at": "2026-01-03T00:00:00Z"
+  },
+  {
+    "prompt_name": "JSON Topic Extractor",
+    "template": "Analyze this text: {input}\nReturn JSON with keys summary and topics (an array).",
+    "system_instructions": "Return valid JSON only.",
+    "description": "Structured JSON prompting example.",
+    "prompt_id": "json_topic_extractor_v1",
+    "version": 1,
+    "created_at": "2026-01-04T00:00:00Z"
+  }
+]

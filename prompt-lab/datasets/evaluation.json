@@ -1,0 +1,37 @@
+[
+  {
+    "id": "summary_ai",
+    "input": "Artificial intelligence is changing software development by helping programmers draft code, find bugs, write tests, and explain unfamiliar systems. Developers still need to review generated work carefully for correctness and security.",
+    "expected_behavior": "Return a concise summary.",
+    "expected_keywords": ["development"],
+    "max_words": 50
+  },
+  {
+    "id": "summary_remote_work",
+    "input": "Remote work gives employees flexibility and removes commuting time, but teams must deliberately document decisions, communicate asynchronously, and create opportunities for social connection.",
+    "expected_behavior": "Summarize the benefits and challenges.",
+    "expected_keywords": ["remote"],
+    "max_words": 50
+  },
+  {
+    "id": "summary_energy",
+    "input": "Solar and wind capacity continues to expand as costs decline. Because generation varies with weather, grids also need storage, transmission upgrades, and flexible demand.",
+    "expected_behavior": "Return a concise summary.",
+    "expected_keywords": ["storage"],
+    "max_words": 50
+  },
+  {
+    "id": "summary_security",
+    "input": "Phishing remains effective because it targets human trust rather than software alone. Training helps, while multifactor authentication and email filtering add important technical defenses.",
+    "expected_behavior": "Summarize the security guidance.",
+    "expected_keywords": ["phishing"],
+    "max_words": 50
+  },
+  {
+    "id": "summary_learning",
+    "input": "Spaced repetition improves long-term memory by reviewing material near the point when it might be forgotten. Active recall strengthens this effect by requiring learners to retrieve answers rather than reread notes.",
+    "expected_behavior": "Return a concise summary.",
+    "expected_keywords": ["recall"],
+    "max_words": 50
+  }
+]
