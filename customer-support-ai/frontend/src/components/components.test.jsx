@@ -58,13 +58,11 @@ it("drawer navigation has accessible close and empty state", () => {
 it("surfaces API errors", async () => {
   vi.stubGlobal(
     "fetch",
-    vi
-      .fn()
-      .mockResolvedValue({
-        ok: false,
-        status: 400,
-        json: async () => ({ detail: "Order unavailable" }),
-      }),
+    vi.fn().mockResolvedValue({
+      ok: false,
+      status: 400,
+      json: async () => ({ detail: "Order unavailable" }),
+    }),
   );
   await expect(request("/test", {})).rejects.toThrow("Order unavailable");
 });

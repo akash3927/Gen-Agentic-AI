@@ -30,6 +30,7 @@ export async function stream(id, message, onEvent) {
     const { value, done } = await reader.read();
     buffer += decoder.decode(value, { stream: !done });
     const lines = buffer.split("\n");
+    // A network chunk can end mid-event; save that fragment for the next read.
     buffer = lines.pop();
     lines.forEach(parse);
     if (done) break;

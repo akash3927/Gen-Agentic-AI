@@ -73,10 +73,13 @@ class RagService:
         # question -> rewrite -> embed -> retrieve -> threshold -> rerank -> context -> LLM
         retrieval_query = rewrite_query(question) if use_rewrite else question
         query_vector = self.embedder.embed([retrieval_query])[0]
-        candidates = self.vector_store.search(query_vector, max(top_k * 3, top_k), document_ids)
+        candidates = self.vector_store.search(
+            query_vector, max(top_k * 3, top_k), document_ids
+        )
         relevant = [item for item in candidates if item["score"] >= threshold]
         sources = rerank(question, relevant)[:top_k]
 
+        # Skip generation when retrieval finds no evidence, avoiding an unsupported answer.
         if not sources:
             return {
                 "answer": INSUFFICIENT_ANSWER,

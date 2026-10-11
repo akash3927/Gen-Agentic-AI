@@ -20,6 +20,7 @@ export function useChat() {
   }, []);
   const messages = items.find((x) => x.id === active)?.messages || [];
   function update(id, fn) {
+    // Functional updates use the latest state when streamed events arrive close together.
     setItems((prev) =>
       prev.map((x) => (x.id === id ? { ...x, messages: fn(x.messages) } : x)),
     );

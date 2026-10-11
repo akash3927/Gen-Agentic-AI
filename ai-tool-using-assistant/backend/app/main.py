@@ -31,15 +31,21 @@ class ChatRequest(BaseModel):
 
 @asynccontextmanager
 async def lifespan(app):
-    app.state.client = AsyncOpenAI(timeout=40, max_retries=0) if os.getenv("OPENAI_API_KEY") else None
+    app.state.client = (
+        AsyncOpenAI(timeout=40, max_retries=0) if os.getenv("OPENAI_API_KEY") else None
+    )
     yield
     if app.state.client:
         await app.state.client.close()
 
 
 app = FastAPI(title="AI Tool-Using Assistant", lifespan=lifespan)
-app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
-                   allow_methods=["GET", "POST"], allow_headers=["Content-Type"])
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
+)
 
 
 @app.get("/api/health")
@@ -50,8 +56,17 @@ async def health():
 @app.post("/api/chat")
 async def ask(request: ChatRequest):
     if app.state.client is None:
-        raise HTTPException(503, "Set OPENAI_API_KEY in backend/.env and restart the backend")
+        raise HTTPException(
+            503, "Set OPENAI_API_KEY in backend/.env and restart the backend"
+        )
     try:
-        return await chat(app.state.client, os.getenv("OPENAI_MODEL", "gpt-4.1-mini"), request.messages)
+        return await chat(
+            app.state.client,
+            os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+            request.messages,
+        )
     except Exception:
-        raise HTTPException(502, "Model request failed or timed out. Check server configuration and retry.") from None
+        raise HTTPException(
+            502,
+            "Model request failed or timed out. Check server configuration and retry.",
+        ) from None

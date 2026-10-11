@@ -27,7 +27,9 @@ class DocumentService:
         self.upload_path = upload_path
         self.upload_path.mkdir(parents=True, exist_ok=True)
 
-    def index(self, filename: str, data: bytes, chunk_size: int, chunk_overlap: int) -> dict:
+    def index(
+        self, filename: str, data: bytes, chunk_size: int, chunk_overlap: int
+    ) -> dict:
         return self._index(uuid4().hex, filename, data, chunk_size, chunk_overlap, True)
 
     def _index(
@@ -60,7 +62,9 @@ class DocumentService:
         return record
 
     def list_documents(self) -> list[dict]:
-        return sorted(self.registry.list(), key=lambda item: item["indexed_at"], reverse=True)
+        return sorted(
+            self.registry.list(), key=lambda item: item["indexed_at"], reverse=True
+        )
 
     def delete(self, document_id: str) -> None:
         record = self.registry.get(document_id)

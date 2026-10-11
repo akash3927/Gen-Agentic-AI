@@ -12,6 +12,7 @@ async function request(path, options = {}) {
 export const api = {
   listDocuments: () => request("/documents"),
   upload(file, chunkSize, chunkOverlap) {
+    // FormData lets the browser set the multipart boundary required for a file upload.
     const body = new FormData();
     body.append("file", file);
     body.append("chunk_size", chunkSize);
@@ -19,10 +20,11 @@ export const api = {
     return request("/documents", { method: "POST", body });
   },
   deleteDocument: (id) => request(`/documents/${id}`, { method: "DELETE" }),
-  reindexDocument: (id) => request(`/documents/${id}/reindex`, {
-    method: "POST",
-    body: new FormData(),
-  }),
+  reindexDocument: (id) =>
+    request(`/documents/${id}/reindex`, {
+      method: "POST",
+      body: new FormData(),
+    }),
   ask(payload) {
     return request("/ask", {
       method: "POST",

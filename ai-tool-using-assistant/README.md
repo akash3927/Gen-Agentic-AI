@@ -1,5 +1,19 @@
 # Project 05 — AI Tool-Using Assistant
 
+## What this project does
+
+Answer chat messages and call validated Python tools for weather, arithmetic, orders, time, and local tasks.
+
+## What you will learn
+
+- Function schemas, Pydantic argument validation, and matching results with call IDs.
+- Concurrent independent reads, sequential writes, and bounded tool rounds.
+- React conversation state, backend-only credentials, tool traces, and SQLite persistence.
+
+## Suggested reading order
+
+Start with `frontend/src/main.jsx`, then read `backend/app/main.py`, `chat.py`, and `tools.py` in that order. Short comments near key decisions explain why the implementation uses that approach.
+
 A direct FastAPI + React application with OpenAI function calling and ordinary Python functions. No LangChain, LangGraph, Agent SDK, background planner, or autonomous agent.
 
 ## Run locally
@@ -31,7 +45,7 @@ Open http://localhost:5173. The browser sends requests through Vite's `/api` pro
 - “Explain a Python dictionary.” → ordinary answer, no tool necessary.
 - “What is the weather in Pune?” → live external weather.
 - “What time is it in Asia/Kolkata?” → local clock.
-- “Calculate (1499 + 799) * 0.9 and show orders for Asha.” → independent reads.
+- “Calculate (1499 + 799) \* 0.9 and show orders for Asha.” → independent reads.
 - “Find order ORD-1001, then calculate its total after a 10% discount.” → dependent sequential rounds.
 - “Create a task titled Review Project 05 with note Run the tests.” → validated SQLite write.
 - “List my tasks.” → persistent local tasks.
@@ -47,14 +61,14 @@ There are at most three tool rounds, eight calls per round, and one final synthe
 
 ## Tools and safeguards
 
-| Tool | Data | Validation / behavior |
-| --- | --- | --- |
-| `calculate` | Local | AST allowlist, length/node/numeric limits; no eval, imports, powers or arbitrary code |
-| `get_weather` | Live Open-Meteo | Bounded city text, fixed HTTPS endpoints, geocoding then current forecast |
-| `current_time` | Local | Validated IANA timezone |
-| `search_orders` | Mock orders | Bounded query; mock records explicitly labeled |
-| `create_task` | SQLite | Nonempty bounded title, bounded note, no extra fields, parameterized INSERT |
-| `list_tasks` | SQLite | No arguments, most recent 100 tasks |
+| Tool            | Data            | Validation / behavior                                                                 |
+| --------------- | --------------- | ------------------------------------------------------------------------------------- |
+| `calculate`     | Local           | AST allowlist, length/node/numeric limits; no eval, imports, powers or arbitrary code |
+| `get_weather`   | Live Open-Meteo | Bounded city text, fixed HTTPS endpoints, geocoding then current forecast             |
+| `current_time`  | Local           | Validated IANA timezone                                                               |
+| `search_orders` | Mock orders     | Bounded query; mock records explicitly labeled                                        |
+| `create_task`   | SQLite          | Nonempty bounded title, bounded note, no extra fields, parameterized INSERT           |
+| `list_tasks`    | SQLite          | No arguments, most recent 100 tasks                                                   |
 
 Every call starts as a proposal. Server-side strict Pydantic validation runs before any function executes, including writes. Invalid, unknown and failed calls become structured tool results; one failed read does not abort the batch. Each tool has an eight-second budget, HTTP requests have five-second timeouts, and model requests have a 45-second budget with SDK retries disabled. Writes commit synchronously without detached background work.
 

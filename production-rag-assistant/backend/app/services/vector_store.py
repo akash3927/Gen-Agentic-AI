@@ -41,7 +41,10 @@ class ChromaVectorStore:
         self.collection.delete(where={"document_id": document_id})
 
     def search(
-        self, query_embedding: list[float], candidate_count: int, document_ids: list[str] | None
+        self,
+        query_embedding: list[float],
+        candidate_count: int,
+        document_ids: list[str] | None,
     ) -> list[dict]:
         available = self.collection.count()
         if available == 0:

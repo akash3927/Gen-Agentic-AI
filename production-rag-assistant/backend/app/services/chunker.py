@@ -18,8 +18,11 @@ def chunk_pages(
     if chunk_size < 50:
         raise ValueError("chunk_size must be at least 50 characters.")
     if chunk_overlap < 0 or chunk_overlap >= chunk_size:
-        raise ValueError("chunk_overlap must be non-negative and smaller than chunk_size.")
+        raise ValueError(
+            "chunk_overlap must be non-negative and smaller than chunk_size."
+        )
     chunks: list[TextChunk] = []
+    # Overlap keeps nearby context when a sentence falls across two chunks.
     step = chunk_size - chunk_overlap
     for page in pages:
         text = re.sub(r"\s+", " ", page.text).strip()

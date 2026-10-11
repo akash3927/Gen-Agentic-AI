@@ -24,7 +24,9 @@ def build_document_service(settings: Settings) -> DocumentService:
     )
 
 
-def create_app(service: DocumentService | None = None, settings: Settings | None = None) -> FastAPI:
+def create_app(
+    service: DocumentService | None = None, settings: Settings | None = None
+) -> FastAPI:
     settings = settings or get_settings()
 
     @asynccontextmanager
@@ -32,7 +34,9 @@ def create_app(service: DocumentService | None = None, settings: Settings | None
         app.state.document_service = service or build_document_service(settings)
         yield
 
-    app = FastAPI(title="PDF Knowledge Assistant API", version="1.0.0", lifespan=lifespan)
+    app = FastAPI(
+        title="PDF Knowledge Assistant API", version="1.0.0", lifespan=lifespan
+    )
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.frontend_origin],

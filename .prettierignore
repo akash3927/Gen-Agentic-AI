@@ -1,0 +1,8 @@
+**/node_modules/
+**/.venv/
+**/dist/
+**/data/
+prompt-lab/storage/
+.vscode/
+**/.pytest_cache/
+**/package-lock.json

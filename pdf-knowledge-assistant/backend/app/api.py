@@ -22,7 +22,9 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@router.post("/documents", response_model=DocumentResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/documents", response_model=DocumentResponse, status_code=status.HTTP_201_CREATED
+)
 async def upload_document(
     file: Annotated[UploadFile, File()],
     chunk_size: Annotated[int, Form(ge=50, le=20_000)] = 1_000,
@@ -32,14 +34,18 @@ async def upload_document(
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are accepted.")
     try:
-        record = service.index(file.filename, await file.read(), chunk_size, chunk_overlap)
+        record = service.index(
+            file.filename, await file.read(), chunk_size, chunk_overlap
+        )
         return _public_document(record)
     except (InvalidPdfError, EmptyPdfError, ValueError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.get("/documents", response_model=list[DocumentResponse])
-def list_documents(service: DocumentService = Depends(get_document_service)) -> list[dict]:
+def list_documents(
+    service: DocumentService = Depends(get_document_service),
+) -> list[dict]:
     return [_public_document(record) for record in service.list_documents()]
 
 

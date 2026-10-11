@@ -1,5 +1,19 @@
 # Production RAG Assistant — Project 04
 
+## What this project does
+
+Answer questions using uploaded PDFs and show the retrieved evidence supporting each answer.
+
+## What you will learn
+
+- The difference between semantic search and retrieval-augmented generation.
+- Query rewriting, similarity thresholds, reranking, and bounded source context.
+- Grounded prompts, insufficient-evidence fallback, and frontend source displays.
+
+## Suggested reading order
+
+Follow `frontend/src/App.jsx` through `frontend/src/api.js` and `backend/app/api.py`, then read `backend/app/services/rag_service.py`. Short comments near key decisions explain why the implementation uses that approach.
+
 A complete, framework-free retrieval-augmented generation application. Upload PDFs, retrieve relevant page-level chunks from ChromaDB, and generate grounded answers with inspectable sources. LangChain and LangGraph are deliberately not used.
 
 ## Visible RAG pipeline
@@ -67,12 +81,12 @@ Tests use deterministic local embeddings, an in-memory Chroma database, and a fa
 
 ## API
 
-| Method | Endpoint | Purpose |
-| --- | --- | --- |
-| `POST` | `/api/documents` | Upload and index a PDF |
-| `GET` | `/api/documents` | List indexed PDFs |
-| `DELETE` | `/api/documents/{id}` | Delete a PDF and its vectors |
-| `POST` | `/api/documents/{id}/reindex` | Rebuild document chunks and vectors |
-| `POST` | `/api/ask` | Retrieve context and generate a grounded answer |
+| Method   | Endpoint                      | Purpose                                         |
+| -------- | ----------------------------- | ----------------------------------------------- |
+| `POST`   | `/api/documents`              | Upload and index a PDF                          |
+| `GET`    | `/api/documents`              | List indexed PDFs                               |
+| `DELETE` | `/api/documents/{id}`         | Delete a PDF and its vectors                    |
+| `POST`   | `/api/documents/{id}/reindex` | Rebuild document chunks and vectors             |
+| `POST`   | `/api/ask`                    | Retrieve context and generate a grounded answer |
 
 Project 05 can build tool calling on top of this explicit RAG foundation.

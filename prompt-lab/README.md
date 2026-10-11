@@ -1,5 +1,19 @@
 # Project 02 — Prompt Laboratory
 
+## What this project does
+
+Create versioned prompts, run and compare them, evaluate outputs, and inspect experiment history.
+
+## What you will learn
+
+- Prompt variables, system instructions, zero-shot and few-shot examples.
+- Pydantic structured outputs and basic repeatable evaluation checks.
+- Browser API calls, latency/token metrics, and readable JSON persistence.
+
+## Suggested reading order
+
+Start with `app/static/index.html`, follow `app/api/routes.py`, then read the prompt, LLM, and evaluation services. Short comments near key decisions explain why the implementation uses that approach.
+
 A beginner-friendly Prompt Engineering laboratory built with FastAPI, Pydantic, the direct OpenAI Python SDK, and a simple browser UI.
 
 ## What it includes

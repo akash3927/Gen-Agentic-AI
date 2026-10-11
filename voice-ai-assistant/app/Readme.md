@@ -1,5 +1,19 @@
 # AI Voice Assistant
 
+## What this project does
+
+Record speech, convert it to text, generate a reply, and play synthesized audio. Text chat uses the same backend.
+
+## What you will learn
+
+- Browser microphone recording and uploading audio with FormData.
+- FastAPI request models and separate speech-to-text, LLM, and text-to-speech services.
+- Streaming text deltas and returning audio bytes to the browser.
+
+## Suggested reading order
+
+Start with `static/index.html`, follow `routes/chat.py`, then read `services/stt.py`, `services/llm.py`, and `services/tts.py`. Short comments near key decisions explain why the implementation uses that approach.
+
 A small FastAPI app with text chat, microphone transcription, and spoken replies.
 
 ## Run locally

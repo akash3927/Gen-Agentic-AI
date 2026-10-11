@@ -8,8 +8,18 @@ from fastapi import APIRouter, HTTPException, Query
 
 from app.config import settings
 from app.models.schemas import (
-    BatchItem, BatchRequest, BatchResult, CompareRequest, CompareResult, DatasetCase,
-    PromptCreate, PromptTemplate, RunRequest, RunResult, StructuredRequest, StructuredResult,
+    BatchItem,
+    BatchRequest,
+    BatchResult,
+    CompareRequest,
+    CompareResult,
+    DatasetCase,
+    PromptCreate,
+    PromptTemplate,
+    RunRequest,
+    RunResult,
+    StructuredRequest,
+    StructuredResult,
 )
 from app.services.evaluation_service import evaluate_output
 from app.services.history_service import HistoryService
@@ -26,7 +36,9 @@ def llm() -> LLMService:
     try:
         return LLMService()
     except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"OpenAI client setup failed: {exc}") from exc
+        raise HTTPException(
+            status_code=500, detail=f"OpenAI client setup failed: {exc}"
+        ) from exc
 
 
 def execute(request: RunRequest, case: DatasetCase | None = None) -> RunResult:
@@ -76,7 +88,9 @@ def execute(request: RunRequest, case: DatasetCase | None = None) -> RunResult:
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=f"OpenAI request failed: {exc}") from exc
+        raise HTTPException(
+            status_code=502, detail=f"OpenAI request failed: {exc}"
+        ) from exc
 
 
 @router.get("/prompts", response_model=list[PromptTemplate])
@@ -105,18 +119,30 @@ def compare(request: CompareRequest) -> CompareResult:
 
 @router.get("/dataset", response_model=list[DatasetCase])
 def dataset() -> list[DatasetCase]:
-    return [DatasetCase.model_validate(item) for item in json.loads(settings.dataset_file.read_text())]
+    return [
+        DatasetCase.model_validate(item)
+        for item in json.loads(settings.dataset_file.read_text())
+    ]
 
 
 @router.post("/batch", response_model=BatchResult)
 def batch(request: BatchRequest) -> BatchResult:
     items: list[BatchItem] = []
     for case in dataset():
-        variables = {"input": case.input, "task": case.expected_behavior, "context": case.input}
+        variables = {
+            "input": case.input,
+            "task": case.expected_behavior,
+            "context": case.input,
+        }
         result = execute(RunRequest(**request.model_dump(), variables=variables), case)
         items.append(BatchItem(case=case, result=result))
     passed = sum(item.result.format_compliant for item in items)
-    return BatchResult(prompt_id=request.prompt_id, passed=passed, failed=len(items) - passed, results=items)
+    return BatchResult(
+        prompt_id=request.prompt_id,
+        passed=passed,
+        failed=len(items) - passed,
+        results=items,
+    )
 
 
 @router.post("/structured", response_model=StructuredResult)
@@ -125,9 +151,13 @@ def structured(request: StructuredRequest) -> StructuredResult:
         parsed, raw = llm().analyze_candidate(request.candidate_text, request.model)
         return StructuredResult(parsed=parsed, raw_output=raw, valid=True)
     except Exception as exc:
-        return StructuredResult(parsed=None, raw_output="", valid=False, validation_error=str(exc))
+        return StructuredResult(
+            parsed=None, raw_output="", valid=False, validation_error=str(exc)
+        )
 
 
 @router.get("/history", response_model=list[RunResult])
-def experiment_history(limit: int = Query(default=100, ge=1, le=500)) -> list[RunResult]:
+def experiment_history(
+    limit: int = Query(default=100, ge=1, le=500)
+) -> list[RunResult]:
     return history.list(limit)

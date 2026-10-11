@@ -1,7 +1,13 @@
 def test_upload_search_list_reindex_and_delete(client, pdf_factory):
     upload = client.post(
         "/api/documents",
-        files={"file": ("guide.pdf", pdf_factory("Python vector search guide"), "application/pdf")},
+        files={
+            "file": (
+                "guide.pdf",
+                pdf_factory("Python vector search guide"),
+                "application/pdf",
+            )
+        },
         data={"chunk_size": 100, "chunk_overlap": 20},
     )
     assert upload.status_code == 201
@@ -22,7 +28,8 @@ def test_upload_search_list_reindex_and_delete(client, pdf_factory):
     assert result["score"] > 0
 
     reindexed = client.post(
-        f"/api/documents/{document['id']}/reindex", data={"chunk_size": 80, "chunk_overlap": 10}
+        f"/api/documents/{document['id']}/reindex",
+        data={"chunk_size": 80, "chunk_overlap": 10},
     )
     assert reindexed.status_code == 200
     assert reindexed.json()["chunk_size"] == 80

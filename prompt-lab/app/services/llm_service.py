@@ -45,11 +45,16 @@ class LLMService:
         )
         return response.output_text, latency_ms, metrics
 
-    def analyze_candidate(self, candidate_text: str, model: str) -> tuple[CandidateAnalysis, str]:
+    def analyze_candidate(
+        self, candidate_text: str, model: str
+    ) -> tuple[CandidateAnalysis, str]:
         response = self.client.responses.parse(
             model=model,
             input=[
-                {"role": "system", "content": "Extract candidate information accurately."},
+                {
+                    "role": "system",
+                    "content": "Extract candidate information accurately.",
+                },
                 {"role": "user", "content": candidate_text},
             ],
             text_format=CandidateAnalysis,

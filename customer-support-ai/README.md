@@ -1,5 +1,19 @@
 # Project 07 — Customer Support AI
 
+## What this project does
+
+Route customer questions to policy retrieval or mock support tools, stream answers, and request confirmation for cancellations and refunds.
+
+## What you will learn
+
+- LangChain LCEL prompts, structured routing, retrievers, and output parsing.
+- RAG citations, validated tools, and conversation-bound confirmation tokens.
+- React hooks/components and buffering newline-delimited JSON streaming events.
+
+## Suggested reading order
+
+Start with `frontend/src/hooks/useChat.js` and `services/api.js`, then follow `backend/app/main.py` into the routing, retrieval, and confirmation paths in `engine.py`. Short comments near key decisions explain why the implementation uses that approach.
+
 Northstar is a responsive support desk built with React, Vite, Tailwind, FastAPI, Pydantic and LangChain. No LangGraph is used.
 
 ## Run locally

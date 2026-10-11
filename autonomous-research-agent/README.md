@@ -1,5 +1,19 @@
 # Project 06 — Autonomous Research Agent
 
+## What this project does
+
+Work toward a research goal through repeated decisions and tool observations, with visible plans and approval before saving notes.
+
+## What you will learn
+
+- How an agent loop differs from a single tool-calling exchange.
+- State feedback, step/token limits, cancellation, and pause/resume approval.
+- Research tools, collected sources, and React polling with effect cleanup.
+
+## Suggested reading order
+
+Start with `frontend/src/main.jsx`, follow `backend/app/main.py`, then trace `run()` in `backend/app/agent.py` and the tools in `tools.py`. Short comments near key decisions explain why the implementation uses that approach.
+
 Python/FastAPI + Pydantic + OpenAI Python SDK, with React/Vite and simple CSS. No agent framework or multi-agent architecture.
 
 ## Run locally

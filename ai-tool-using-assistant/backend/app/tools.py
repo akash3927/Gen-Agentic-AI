@@ -1,4 +1,5 @@
 """Allowlisted Python tools. Model strings are never evaluated as Python."""
+
 import ast
 import asyncio
 import math
@@ -55,15 +56,22 @@ async def calculate(args):
     tree = ast.parse(args.expression, mode="eval")
     if len(list(ast.walk(tree))) > 60:
         raise ValueError("Expression too complex")
-    operations = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
-                  ast.Div: operator.truediv, ast.Mod: operator.mod}
+    operations = {
+        ast.Add: operator.add,
+        ast.Sub: operator.sub,
+        ast.Mult: operator.mul,
+        ast.Div: operator.truediv,
+        ast.Mod: operator.mod,
+    }
 
     def visit(node):
         if isinstance(node, ast.Constant) and type(node.value) in (int, float):
             value = node.value
         elif isinstance(node, ast.BinOp) and type(node.op) in operations:
             value = operations[type(node.op)](visit(node.left), visit(node.right))
-        elif isinstance(node, ast.UnaryOp) and isinstance(node.op, (ast.UAdd, ast.USub)):
+        elif isinstance(node, ast.UnaryOp) and isinstance(
+            node.op, (ast.UAdd, ast.USub)
+        ):
             value = visit(node.operand) * (-1 if isinstance(node.op, ast.USub) else 1)
         else:
             raise ValueError("Only numbers, parentheses, +, -, *, / and % are allowed")
@@ -76,49 +84,99 @@ async def calculate(args):
 
 async def weather(args):
     async with httpx.AsyncClient(timeout=5) as client:
-        response = await client.get("https://geocoding-api.open-meteo.com/v1/search",
-                                    params={"name": args.city, "count": 1, "language": "en"})
+        response = await client.get(
+            "https://geocoding-api.open-meteo.com/v1/search",
+            params={"name": args.city, "count": 1, "language": "en"},
+        )
         response.raise_for_status()
         places = response.json().get("results", [])
         if not places:
             raise ValueError("City not found; include a more specific city name")
         place = places[0]
-        response = await client.get("https://api.open-meteo.com/v1/forecast", params={
-            "latitude": place["latitude"], "longitude": place["longitude"],
-            "current": "temperature_2m,apparent_temperature,wind_speed_10m", "timezone": "auto"})
+        response = await client.get(
+            "https://api.open-meteo.com/v1/forecast",
+            params={
+                "latitude": place["latitude"],
+                "longitude": place["longitude"],
+                "current": "temperature_2m,apparent_temperature,wind_speed_10m",
+                "timezone": "auto",
+            },
+        )
         response.raise_for_status()
         data = response.json()
-        return {"city": place["name"], "country": place.get("country"),
-                "current": data["current"], "units": data["current_units"],
-                "source": "Open-Meteo", "source_url": "https://open-meteo.com/"}
+        return {
+            "city": place["name"],
+            "country": place.get("country"),
+            "current": data["current"],
+            "units": data["current_units"],
+            "source": "Open-Meteo",
+            "source_url": "https://open-meteo.com/",
+        }
 
 
 async def current_time(args):
-    return {"timezone": args.timezone, "datetime": datetime.now(ZoneInfo(args.timezone)).isoformat()}
+    return {
+        "timezone": args.timezone,
+        "datetime": datetime.now(ZoneInfo(args.timezone)).isoformat(),
+    }
 
 
 ORDERS = [
-    {"order_id": "ORD-1001", "customer_id": "C001", "customer": "Asha Patel", "status": "shipped", "total": 1499, "currency": "INR"},
-    {"order_id": "ORD-1002", "customer_id": "C002", "customer": "Ravi Shah", "status": "processing", "total": 799, "currency": "INR"},
-    {"order_id": "ORD-1003", "customer_id": "C001", "customer": "Asha Patel", "status": "delivered", "total": 2499, "currency": "INR"},
+    {
+        "order_id": "ORD-1001",
+        "customer_id": "C001",
+        "customer": "Asha Patel",
+        "status": "shipped",
+        "total": 1499,
+        "currency": "INR",
+    },
+    {
+        "order_id": "ORD-1002",
+        "customer_id": "C002",
+        "customer": "Ravi Shah",
+        "status": "processing",
+        "total": 799,
+        "currency": "INR",
+    },
+    {
+        "order_id": "ORD-1003",
+        "customer_id": "C001",
+        "customer": "Asha Patel",
+        "status": "delivered",
+        "total": 2499,
+        "currency": "INR",
+    },
 ]
 
 
 async def search_orders(args):
-    return {"mock_data": True, "orders": [row for row in ORDERS if any(
-        args.query.casefold() in str(row[key]).casefold() for key in ("order_id", "customer_id", "customer"))]}
+    return {
+        "mock_data": True,
+        "orders": [
+            row
+            for row in ORDERS
+            if any(
+                args.query.casefold() in str(row[key]).casefold()
+                for key in ("order_id", "customer_id", "customer")
+            )
+        ],
+    }
 
 
 def connection():
     db = sqlite3.connect(os.getenv("TASK_DB_PATH", "tasks.sqlite3"), timeout=2)
-    db.execute("CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY, title TEXT NOT NULL, note TEXT NOT NULL)")
+    db.execute(
+        "CREATE TABLE IF NOT EXISTS tasks (id INTEGER PRIMARY KEY, title TEXT NOT NULL, note TEXT NOT NULL)"
+    )
     return db
 
 
 async def create_task(args):
     # No await between starting and committing a local write: timeout cannot leave a background write.
     with connection() as db:
-        cursor = db.execute("INSERT INTO tasks(title, note) VALUES (?, ?)", (args.title, args.note))
+        cursor = db.execute(
+            "INSERT INTO tasks(title, note) VALUES (?, ?)", (args.title, args.note)
+        )
         result = {"id": cursor.lastrowid, **args.model_dump()}
     db.close()
     return result
@@ -126,7 +184,9 @@ async def create_task(args):
 
 async def list_tasks(args):
     with connection() as db:
-        rows = db.execute("SELECT id, title, note FROM tasks ORDER BY id DESC LIMIT 100").fetchall()
+        rows = db.execute(
+            "SELECT id, title, note FROM tasks ORDER BY id DESC LIMIT 100"
+        ).fetchall()
     db.close()
     return {"tasks": [dict(zip(("id", "title", "note"), row)) for row in rows]}
 
@@ -140,23 +200,53 @@ class Tool:
 
 
 TOOLS = {
-    "calculate": Tool(Calculate, calculate, "Calculate basic arithmetic; no powers or Python code."),
-    "get_weather": Tool(Weather, weather, "Get current live weather for a city using Open-Meteo."),
-    "current_time": Tool(Clock, current_time, "Get current date/time for an IANA timezone."),
-    "search_orders": Tool(Search, search_orders, "Search mock customer orders by customer name, customer ID or order ID."),
-    "create_task": Tool(Task, create_task, "Create a local task only when the user explicitly asks to create/save one. Supply title and note (empty if absent).", True),
-    "list_tasks": Tool(Empty, list_tasks, "List up to 100 most recent saved local tasks."),
+    "calculate": Tool(
+        Calculate, calculate, "Calculate basic arithmetic; no powers or Python code."
+    ),
+    "get_weather": Tool(
+        Weather, weather, "Get current live weather for a city using Open-Meteo."
+    ),
+    "current_time": Tool(
+        Clock, current_time, "Get current date/time for an IANA timezone."
+    ),
+    "search_orders": Tool(
+        Search,
+        search_orders,
+        "Search mock customer orders by customer name, customer ID or order ID.",
+    ),
+    "create_task": Tool(
+        Task,
+        create_task,
+        "Create a local task only when the user explicitly asks to create/save one. Supply title and note (empty if absent).",
+        True,
+    ),
+    "list_tasks": Tool(
+        Empty, list_tasks, "List up to 100 most recent saved local tasks."
+    ),
 }
 
 
 def schemas():
-    return [{"type": "function", "name": name, "description": tool.description,
-             "parameters": tool.arguments.model_json_schema(), "strict": True} for name, tool in TOOLS.items()]
+    return [
+        {
+            "type": "function",
+            "name": name,
+            "description": tool.description,
+            "parameters": tool.arguments.model_json_schema(),
+            "strict": True,
+        }
+        for name, tool in TOOLS.items()
+    ]
 
 
 async def execute(call, timeout=8):
-    trace = {"call_id": call.call_id, "tool": call.name, "arguments": call.arguments,
-             "stages": ["proposed"], "status": "error"}
+    trace = {
+        "call_id": call.call_id,
+        "tool": call.name,
+        "arguments": call.arguments,
+        "stages": ["proposed"],
+        "status": "error",
+    }
     try:
         tool = TOOLS.get(call.name)
         if tool is None:
@@ -174,7 +264,11 @@ async def execute(call, timeout=8):
     except Exception as exc:
         # Do not expose provider responses, paths, credentials or internal stack traces.
         if isinstance(exc, (ValueError, SyntaxError, ZeroDivisionError)):
-            message = "Invalid arguments or arithmetic operation" if hasattr(exc, "errors") else str(exc)
+            message = (
+                "Invalid arguments or arithmetic operation"
+                if hasattr(exc, "errors")
+                else str(exc)
+            )
         else:
             message = "Tool failed; please retry"
         trace["result"] = {"error": message, "code": "tool_error"}

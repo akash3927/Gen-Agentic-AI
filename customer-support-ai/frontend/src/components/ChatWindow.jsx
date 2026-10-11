@@ -1,1 +1,57 @@
-import {useEffect,useRef} from 'react';import MessageBubble from './MessageBubble';export default function ChatWindow({messages,busy,onSend}){const end=useRef();useEffect(()=>{if(messages.length)end.current?.scrollIntoView({behavior:'smooth'})},[messages,busy]);return <div className="conversation">{messages.length===0?<div className="welcome"><div className="welcome-mark">✳</div><span className="eyebrow">YOUR PERSONAL SUPPORT DESK</span><h1>A little help.<br/><span>A lot less hassle.</span></h1><p>From order updates to the fine print, let’s get you<br className="desktop-break"/> the answers you’re looking for.</p><div className="suggestions">{[['↺','Returns & refunds','What is your refund policy?'],['▧','Track an order','Where is order 12345?'],['◈','Talk to our team','Create a support ticket for a damaged item']].map(([icon,label,q])=><button disabled={busy} key={label} onClick={()=>onSend(q)}><span>{icon}</span><strong>{label}</strong><small>{q}</small><b>↗</b></button>)}</div><div className="demo-note">Demo orders: <strong>12345</strong> processing · <strong>67890</strong> delivered</div></div>:messages.map((m,i)=><MessageBubble key={i} message={m}/>)}{busy&&messages.at(-1)?.content&&<div className="stream-status" role="status">● Generating response…</div>}<div ref={end}/></div>}
+import { useEffect, useRef } from "react";
+import MessageBubble from "./MessageBubble";
+export default function ChatWindow({ messages, busy, onSend }) {
+  const end = useRef();
+  useEffect(() => {
+    if (messages.length) end.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, busy]);
+  return (
+    <div className="conversation">
+      {messages.length === 0 ? (
+        <div className="welcome">
+          <div className="welcome-mark">✳</div>
+          <span className="eyebrow">YOUR PERSONAL SUPPORT DESK</span>
+          <h1>
+            A little help.
+            <br />
+            <span>A lot less hassle.</span>
+          </h1>
+          <p>
+            From order updates to the fine print, let’s get you
+            <br className="desktop-break" /> the answers you’re looking for.
+          </p>
+          <div className="suggestions">
+            {[
+              ["↺", "Returns & refunds", "What is your refund policy?"],
+              ["▧", "Track an order", "Where is order 12345?"],
+              [
+                "◈",
+                "Talk to our team",
+                "Create a support ticket for a damaged item",
+              ],
+            ].map(([icon, label, q]) => (
+              <button disabled={busy} key={label} onClick={() => onSend(q)}>
+                <span>{icon}</span>
+                <strong>{label}</strong>
+                <small>{q}</small>
+                <b>↗</b>
+              </button>
+            ))}
+          </div>
+          <div className="demo-note">
+            Demo orders: <strong>12345</strong> processing ·{" "}
+            <strong>67890</strong> delivered
+          </div>
+        </div>
+      ) : (
+        messages.map((m, i) => <MessageBubble key={i} message={m} />)
+      )}
+      {busy && messages.at(-1)?.content && (
+        <div className="stream-status" role="status">
+          ● Generating response…
+        </div>
+      )}
+      <div ref={end} />
+    </div>
+  );
+}

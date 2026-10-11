@@ -2,7 +2,12 @@ import pytest
 from pypdf import PdfWriter
 
 from app.services.chunker import chunk_pages
-from app.services.pdf_extractor import EmptyPdfError, InvalidPdfError, PageText, extract_pdf_pages
+from app.services.pdf_extractor import (
+    EmptyPdfError,
+    InvalidPdfError,
+    PageText,
+    extract_pdf_pages,
+)
 
 
 def test_extraction_and_chunk_metadata(pdf_factory):

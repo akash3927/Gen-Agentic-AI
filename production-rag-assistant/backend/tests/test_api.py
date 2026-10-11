@@ -6,8 +6,12 @@ def upload(client, pdf_factory, filename, text):
     )
 
 
-def test_rag_endpoint_returns_grounded_answer_and_sources(client, pdf_factory, services):
-    indexed = upload(client, pdf_factory, "python.pdf", "Python vector search uses embeddings.")
+def test_rag_endpoint_returns_grounded_answer_and_sources(
+    client, pdf_factory, services
+):
+    indexed = upload(
+        client, pdf_factory, "python.pdf", "Python vector search uses embeddings."
+    )
     assert indexed.status_code == 201
 
     response = client.post(
@@ -31,7 +35,9 @@ def test_rag_endpoint_returns_grounded_answer_and_sources(client, pdf_factory, s
 
 
 def test_document_metadata_filter(client, pdf_factory):
-    python_doc = upload(client, pdf_factory, "python.pdf", "Python vector search").json()
+    python_doc = upload(
+        client, pdf_factory, "python.pdf", "Python vector search"
+    ).json()
     music_doc = upload(client, pdf_factory, "music.pdf", "Music database notes").json()
     response = client.post(
         "/api/ask",

@@ -56,7 +56,10 @@ def services(tmp_path):
     model = FakeLanguageModel()
     store = ChromaVectorStore(client=chromadb.EphemeralClient())
     documents = DocumentService(
-        embedder, store, DocumentRegistry(tmp_path / "documents.json"), tmp_path / "uploads"
+        embedder,
+        store,
+        DocumentRegistry(tmp_path / "documents.json"),
+        tmp_path / "uploads",
     )
     rag = RagService(embedder, model, store, max_context_characters=2_000)
     return documents, rag, model
@@ -65,5 +68,7 @@ def services(tmp_path):
 @pytest.fixture
 def client(services):
     documents, rag, _ = services
-    with TestClient(create_app(document_service=documents, rag_service=rag)) as test_client:
+    with TestClient(
+        create_app(document_service=documents, rag_service=rag)
+    ) as test_client:
         yield test_client

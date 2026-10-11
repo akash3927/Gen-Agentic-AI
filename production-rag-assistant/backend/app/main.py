@@ -15,7 +15,9 @@ from app.services.vector_store import ChromaVectorStore
 
 def build_services(settings: Settings) -> tuple[DocumentService, RagService]:
     if not settings.openai_api_key:
-        raise ValueError("OPENAI_API_KEY is required for embeddings and grounded answers.")
+        raise ValueError(
+            "OPENAI_API_KEY is required for embeddings and grounded answers."
+        )
     client = OpenAI(api_key=settings.openai_api_key)
     embedder = OpenAIEmbeddingProvider(
         client, settings.embedding_model, settings.embedding_batch_size
@@ -52,7 +54,9 @@ def create_app(
             app.state.rag_service = rag_service
         yield
 
-    app = FastAPI(title="Production RAG Assistant API", version="1.0.0", lifespan=lifespan)
+    app = FastAPI(
+        title="Production RAG Assistant API", version="1.0.0", lifespan=lifespan
+    )
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[settings.frontend_origin],

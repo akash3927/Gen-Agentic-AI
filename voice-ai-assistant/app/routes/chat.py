@@ -14,48 +14,40 @@ router = APIRouter()
 def chat(request: ChatRequest):
     response = generate_response(request.message)
 
-    return ChatResponse(
-        response=response
-    )
+    return ChatResponse(response=response)
+
 
 @router.post("/chat/stream")
 def chat_stream(request: ChatRequest):
 
-    return StreamingResponse(
-        stream_response(request.message),
-        media_type="text/plain"
-    )
+    return StreamingResponse(stream_response(request.message), media_type="text/plain")
+
 
 @router.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):
 
     audio = await file.read()
 
-    text = transcribe_audio(
-        (file.filename, audio, file.content_type)
-    )
+    text = transcribe_audio((file.filename, audio, file.content_type))
 
-    return {
-        "text": text
-    }
+    return {"text": text}
+
 
 @router.post("/voice-chat")
 async def voice_chat(file: UploadFile = File(...)):
 
     audio = await file.read()
 
-    text = transcribe_audio(
-        (file.filename, audio, file.content_type)
-    )
+    text = transcribe_audio((file.filename, audio, file.content_type))
 
+    # Transcribe first so the text model can answer spoken input using the same chat flow.
     answer = generate_response(text)
 
-    return {
-        "transcript": text,
-        "response": answer
-    }
+    return {"transcript": text, "response": answer}
+
 
 from fastapi.responses import FileResponse
+
 
 @router.post("/speak")
 def speak(request: SpeakRequest):

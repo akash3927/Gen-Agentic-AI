@@ -26,8 +26,11 @@ class PromptService:
     def create(self, data: PromptCreate) -> PromptTemplate:
         existing = self.list_prompts()
         versions = [p.version for p in existing if p.prompt_name == data.prompt_name]
+        # Keep old versions so experiments can be traced back to the exact prompt used.
         version = max(versions, default=0) + 1
-        slug = re.sub(r"[^a-z0-9]+", "_", data.prompt_name.lower()).strip("_") or "prompt"
+        slug = (
+            re.sub(r"[^a-z0-9]+", "_", data.prompt_name.lower()).strip("_") or "prompt"
+        )
         prompt = PromptTemplate(
             **data.model_dump(),
             prompt_id=f"{slug}_v{version}_{uuid4().hex[:6]}",
@@ -40,6 +43,7 @@ class PromptService:
     @staticmethod
     def render(template: str, variables: dict[str, object]) -> str:
         required = {name for _, name, _, _ in Formatter().parse(template) if name}
+        # Catch missing inputs before spending an API call on an incomplete prompt.
         missing = sorted(required - variables.keys())
         if missing:
             raise ValueError(f"Missing template variables: {', '.join(missing)}")

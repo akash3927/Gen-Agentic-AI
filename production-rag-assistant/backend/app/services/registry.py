@@ -10,7 +10,11 @@ class DocumentRegistry:
         self._lock = Lock()
 
     def _read(self) -> dict[str, dict]:
-        return json.loads(self.path.read_text(encoding="utf-8")) if self.path.exists() else {}
+        return (
+            json.loads(self.path.read_text(encoding="utf-8"))
+            if self.path.exists()
+            else {}
+        )
 
     def _write(self, records: dict[str, dict]) -> None:
         temporary = self.path.with_suffix(".tmp")

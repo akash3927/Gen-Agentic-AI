@@ -22,17 +22,24 @@ def test_run_with_mocked_openai(monkeypatch) -> None:
     class FakeResponses:
         def create(self, **kwargs):
             usage = SimpleNamespace(input_tokens=10, output_tokens=4, total_tokens=14)
-            return SimpleNamespace(output_text="A short development summary.", usage=usage)
+            return SimpleNamespace(
+                output_text="A short development summary.", usage=usage
+            )
 
     fake_client = SimpleNamespace(responses=FakeResponses())
-    monkeypatch.setattr("app.api.routes.LLMService", lambda: __import__("app.services.llm_service", fromlist=["LLMService"]).LLMService(fake_client))
+    monkeypatch.setattr(
+        "app.api.routes.LLMService",
+        lambda: __import__(
+            "app.services.llm_service", fromlist=["LLMService"]
+        ).LLMService(fake_client),
+    )
     monkeypatch.setattr("app.api.routes.history.add", lambda result: None)
     response = client.post(
         "/api/run",
         json={
             "template": "Summarize: {input}",
             "variables": {"input": "AI changes development."},
-            "model": "test-model"
+            "model": "test-model",
         },
     )
     assert response.status_code == 200

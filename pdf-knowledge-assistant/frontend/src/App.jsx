@@ -25,6 +25,7 @@ export default function App() {
     }
   };
 
+  // Load the server registry on mount so previously indexed PDFs appear after a refresh.
   useEffect(() => {
     loadDocuments();
   }, []);
@@ -52,7 +53,9 @@ export default function App() {
     setMessage("");
     try {
       await api.deleteDocument(id);
-      setResults((current) => current.filter((item) => item.document_id !== id));
+      setResults((current) =>
+        current.filter((item) => item.document_id !== id),
+      );
       await loadDocuments();
     } catch (error) {
       setMessage(error.message);
@@ -95,10 +98,16 @@ export default function App() {
       <header>
         <p className="eyebrow">Project 03</p>
         <h1>PDF Knowledge Assistant</h1>
-        <p className="subtitle">Index your PDFs, then search their content by meaning.</p>
+        <p className="subtitle">
+          Index your PDFs, then search their content by meaning.
+        </p>
       </header>
 
-      {message && <div className="notice" role="status">{message}</div>}
+      {message && (
+        <div className="notice" role="status">
+          {message}
+        </div>
+      )}
 
       <section className="card">
         <h2>Upload PDF</h2>
@@ -112,14 +121,28 @@ export default function App() {
           <div className="settings">
             <label>
               Chunk size
-              <input type="number" min="50" max="20000" value={chunkSize} onChange={(e) => setChunkSize(e.target.value)} />
+              <input
+                type="number"
+                min="50"
+                max="20000"
+                value={chunkSize}
+                onChange={(e) => setChunkSize(e.target.value)}
+              />
             </label>
             <label>
               Overlap
-              <input type="number" min="0" max="10000" value={chunkOverlap} onChange={(e) => setChunkOverlap(e.target.value)} />
+              <input
+                type="number"
+                min="0"
+                max="10000"
+                value={chunkOverlap}
+                onChange={(e) => setChunkOverlap(e.target.value)}
+              />
             </label>
           </div>
-          <button disabled={busy === "upload"}>{busy === "upload" ? "Indexing…" : "Upload and index"}</button>
+          <button disabled={busy === "upload"}>
+            {busy === "upload" ? "Indexing…" : "Upload and index"}
+          </button>
         </form>
       </section>
 
@@ -137,12 +160,27 @@ export default function App() {
                 <div>
                   <strong>{document.filename}</strong>
                   <small>
-                    {document.page_count} {document.page_count === 1 ? "page" : "pages"} · {document.chunk_count} chunks · {dateFormatter.format(new Date(document.indexed_at))}
+                    {document.page_count}{" "}
+                    {document.page_count === 1 ? "page" : "pages"} ·{" "}
+                    {document.chunk_count} chunks ·{" "}
+                    {dateFormatter.format(new Date(document.indexed_at))}
                   </small>
                 </div>
                 <div className="actions">
-                  <button className="secondary" disabled={busy === document.id} onClick={() => reindex(document.id)}>Re-index</button>
-                  <button className="danger" disabled={busy === document.id} onClick={() => remove(document.id)}>Delete</button>
+                  <button
+                    className="secondary"
+                    disabled={busy === document.id}
+                    onClick={() => reindex(document.id)}
+                  >
+                    Re-index
+                  </button>
+                  <button
+                    className="danger"
+                    disabled={busy === document.id}
+                    onClick={() => remove(document.id)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </article>
             ))}
@@ -155,26 +193,48 @@ export default function App() {
         <form onSubmit={search} className="search-form">
           <label className="query-field">
             Search across all indexed PDFs
-            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="What does the document say about…" required />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="What does the document say about…"
+              required
+            />
           </label>
           <label>
             Top K
-            <input type="number" min="1" max="50" value={topK} onChange={(e) => setTopK(e.target.value)} />
+            <input
+              type="number"
+              min="1"
+              max="50"
+              value={topK}
+              onChange={(e) => setTopK(e.target.value)}
+            />
           </label>
-          <button disabled={busy === "search"}>{busy === "search" ? "Searching…" : "Search"}</button>
+          <button disabled={busy === "search"}>
+            {busy === "search" ? "Searching…" : "Search"}
+          </button>
         </form>
 
         <div className="results">
           {results.map((result, index) => (
-            <article className="result" key={`${result.document_id}-${result.chunk_index}`}>
+            <article
+              className="result"
+              key={`${result.document_id}-${result.chunk_index}`}
+            >
               <div className="result-meta">
-                <strong>#{index + 1} · Score {result.score.toFixed(3)}</strong>
-                <span>{result.pdf_name} · Page {result.page_number}</span>
+                <strong>
+                  #{index + 1} · Score {result.score.toFixed(3)}
+                </strong>
+                <span>
+                  {result.pdf_name} · Page {result.page_number}
+                </span>
               </div>
               <p>{result.text}</p>
             </article>
           ))}
-          {results.length === 0 && <p className="empty">Search results will appear here.</p>}
+          {results.length === 0 && (
+            <p className="empty">Search results will appear here.</p>
+          )}
         </div>
       </section>
     </main>

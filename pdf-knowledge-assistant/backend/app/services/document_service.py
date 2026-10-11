@@ -31,7 +31,9 @@ class DocumentService:
         self, filename: str, pdf_bytes: bytes, chunk_size: int, chunk_overlap: int
     ) -> dict:
         document_id = uuid4().hex
-        return self._index(document_id, filename, pdf_bytes, chunk_size, chunk_overlap, True)
+        return self._index(
+            document_id, filename, pdf_bytes, chunk_size, chunk_overlap, True
+        )
 
     def _index(
         self,
@@ -64,7 +66,9 @@ class DocumentService:
         return record
 
     def list_documents(self) -> list[dict]:
-        return sorted(self.registry.list(), key=lambda item: item["indexed_at"], reverse=True)
+        return sorted(
+            self.registry.list(), key=lambda item: item["indexed_at"], reverse=True
+        )
 
     def delete(self, document_id: str) -> None:
         record = self.registry.get(document_id)
@@ -91,5 +95,6 @@ class DocumentService:
         )
 
     def search(self, query: str, top_k: int) -> list[dict]:
+        # Embed queries with the same provider as documents so their vectors are comparable.
         query_vector = self.embedder.embed([query])[0]
         return self.vector_store.search(query_vector, top_k)

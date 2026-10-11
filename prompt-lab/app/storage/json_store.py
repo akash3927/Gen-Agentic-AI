@@ -22,10 +22,14 @@ class JsonStore:
 
     def write_all(self, items: list[dict[str, Any]]) -> None:
         with self._lock:
-            self.path.write_text(json.dumps(items, indent=2, default=str) + "\n", encoding="utf-8")
+            self.path.write_text(
+                json.dumps(items, indent=2, default=str) + "\n", encoding="utf-8"
+            )
 
     def append(self, item: dict[str, Any]) -> None:
         with self._lock:
             items = json.loads(self.path.read_text(encoding="utf-8"))
             items.append(item)
-            self.path.write_text(json.dumps(items, indent=2, default=str) + "\n", encoding="utf-8")
+            self.path.write_text(
+                json.dumps(items, indent=2, default=str) + "\n", encoding="utf-8"
+            )

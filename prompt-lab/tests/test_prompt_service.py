@@ -4,7 +4,9 @@ from app.services.prompt_service import PromptService
 
 
 def test_render_replaces_variables() -> None:
-    rendered = PromptService.render("Hello {name}, do {task}.", {"name": "Ada", "task": "a review"})
+    rendered = PromptService.render(
+        "Hello {name}, do {task}.", {"name": "Ada", "task": "a review"}
+    )
     assert rendered == "Hello Ada, do a review."
 
 

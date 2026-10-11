@@ -1,5 +1,19 @@
 # PDF Knowledge Assistant — Project 03
 
+## What this project does
+
+Upload PDFs and search for relevant passages by meaning, with page references and similarity scores.
+
+## What you will learn
+
+- PDF extraction, page metadata, overlapping chunks, and embeddings.
+- Chroma vector similarity search and document indexing/reindexing.
+- React form state, file uploads, loading/error feedback, and FastAPI validation.
+
+## Suggested reading order
+
+Start with `frontend/src/App.jsx` and `frontend/src/api.js`, then follow `backend/app/api.py` into `services/document_service.py`, `chunker.py`, and `vector_store.py`. Short comments near key decisions explain why the implementation uses that approach.
+
 A learning-focused semantic PDF search application. It extracts text with PyPDF, creates overlapping chunks, requests embeddings directly from OpenAI, stores vectors in ChromaDB, and returns the most similar source chunks. It does **not** generate answers with an LLM.
 
 ## Architecture
@@ -59,12 +73,12 @@ Tests replace OpenAI with deterministic embeddings and use Chroma's in-memory cl
 
 ## API summary
 
-| Method | Endpoint | Purpose |
-| --- | --- | --- |
-| `POST` | `/api/documents` | Upload and index a PDF; accepts `chunk_size` and `chunk_overlap` form fields |
-| `GET` | `/api/documents` | List indexed PDFs |
-| `DELETE` | `/api/documents/{id}` | Delete a PDF and its vectors |
-| `POST` | `/api/documents/{id}/reindex` | Rebuild vectors, optionally with new chunk settings |
-| `POST` | `/api/search` | Embed a query and return Top-K source chunks |
+| Method   | Endpoint                      | Purpose                                                                      |
+| -------- | ----------------------------- | ---------------------------------------------------------------------------- |
+| `POST`   | `/api/documents`              | Upload and index a PDF; accepts `chunk_size` and `chunk_overlap` form fields |
+| `GET`    | `/api/documents`              | List indexed PDFs                                                            |
+| `DELETE` | `/api/documents/{id}`         | Delete a PDF and its vectors                                                 |
+| `POST`   | `/api/documents/{id}/reindex` | Rebuild vectors, optionally with new chunk settings                          |
+| `POST`   | `/api/search`                 | Embed a query and return Top-K source chunks                                 |
 
 The search response contains similarity score, chunk text, PDF name, page number, document ID, and chunk index.

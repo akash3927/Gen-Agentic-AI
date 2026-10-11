@@ -133,9 +133,11 @@
         addMessage("assistant", data.response);
       }
 
-      document.getElementById("message").addEventListener("keydown", (event) => {
-        if (event.key === "Enter") sendMessage();
-      });
+      document
+        .getElementById("message")
+        .addEventListener("keydown", (event) => {
+          if (event.key === "Enter") sendMessage();
+        });
 
       async function toggleRecording() {
         const button = document.getElementById("recordButton");
@@ -147,6 +149,7 @@
 
           audioChunks = [];
 
+          // Collect recorded audio before uploading it; the server handles transcription.
           mediaRecorder = new MediaRecorder(stream);
 
           mediaRecorder.ondataavailable = (event) => {
@@ -207,7 +210,10 @@
         });
 
         if (!speechResponse.ok) {
-          addMessage("assistant", "The reply was generated, but audio playback failed.");
+          addMessage(
+            "assistant",
+            "The reply was generated, but audio playback failed.",
+          );
           return;
         }
 
@@ -220,7 +226,6 @@
         player.src = audioUrl;
 
         player.play();
-
       }
     </script>
   </body>

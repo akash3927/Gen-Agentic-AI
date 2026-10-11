@@ -24,7 +24,9 @@ def evaluate_output(
 
     if case:
         lowered = output.lower()
-        missing = [word for word in case.expected_keywords if word.lower() not in lowered]
+        missing = [
+            word for word in case.expected_keywords if word.lower() not in lowered
+        ]
         if missing:
             passed = False
             notes.append(f"Missing expected keywords: {', '.join(missing)}")
